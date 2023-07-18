@@ -86,6 +86,9 @@ Jul 18 14:17:35 selinux systemd[1]: Starting The nginx HTTP and reverse proxy se
 Jul 18 14:17:35 selinux nginx[3198]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
 Jul 18 14:17:35 selinux systemd[1]: Started The nginx HTTP and reverse proxy server.
 Jul 18 14:17:35 selinux nginx[3198]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+
+###просматриваем страницу
+
 ]0;root@selinux:~[root@selinux ~]# systemctl status nginx.service [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcurl 127.0.01[K.01[K.1[K[K[K1:4881
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -245,6 +248,9 @@ href="http://wiki.centos.org/FAQ/">FAQ</a>.</p>
 </html>
 ]0;root@selinux:~[root@selinux ~]# curl 127.0.0.1:4881systemctl status nginx.service [1@restart[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Petsebool -P nis_enabled 1[K0
+
+###возвращаем настройку обратно и убеждаемся что доступа снова нет
+
 ]0;root@selinux:~[root@selinux ~]# setsebool -P nis_enabled 0
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[7Pcurl 127.0.0.1:4881systemctl status nginx.service [1@restart[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
 Job for nginx.service failed because the control process exited with error code. See "systemctl status nginx.service" and "journalctl -xe" for details.
@@ -252,16 +258,23 @@ Job for nginx.service failed because the control process exited with error code.
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Petsebool -P nis_enabled 0
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[7Pcurl 127.0.0.1:4881
 curl: (7) Failed connect to 127.0.0.1:4881; Connection refused
+
+###просматриваем разрешенные порты http
+
 ]0;root@selinux:~[root@selinux ~]# semanage port -l | grep http
 [01;31m[Khttp[m[K_cache_port_t              tcp      8080, 8118, 8123, 10001-10010
 [01;31m[Khttp[m[K_cache_port_t              udp      3130
 [01;31m[Khttp[m[K_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
 pegasus_[01;31m[Khttp[m[K_port_t            tcp      5988
 pegasus_[01;31m[Khttp[m[Ks_port_t           tcp      5989
-]0;root@selinux:~[root@selinux ~]# emanage port -a -t http_port_t -p tcp 4881
-[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1@s
+
+###добавляем порт 4881
+
 ]0;root@selinux:~[root@selinux ~]# semanage port -a -t http_port_t -p tcp 4881[15Pl | grep http
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[9Pcurl 127.0.0.1:4881systemctl restart nginx.service 
+
+###перезагружаем службу и убеждаемся что все работает
+
 ]0;root@selinux:~[root@selinux ~]# systemctl restart nginx.service 
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cemanage port -a -t http_port_t -p tcp 4881[15Pl | grep http
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[9Pcurl 127.0.0.1:4881
@@ -423,6 +436,9 @@ href="http://wiki.centos.org/FAQ/">FAQ</a>.</p>
 </html>
 ]0;root@selinux:~[root@selinux ~]# curl 127.0.0.1:4881systemctl restart nginx.service 
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cemanage port -a -t http_port_t -p tcp 4881[C[1P[1@d
+
+###возвращаем опцию в исходное состояние
+
 ]0;root@selinux:~[root@selinux ~]# semanage port -d -t http_port_t -p tcp 4881
 [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pcurl 127.0.0.1:4881systemctl restart nginx.service 
 Job for nginx.service failed because the control process exited with error code. See "systemctl status nginx.service" and "journalctl -xe" for details.
@@ -455,10 +471,14 @@ type=SERVICE_START msg=audit(1689689963.663:967): pid=1 uid=0 auid=4294967295 se
 type=AVC msg=audit(1689689987.462:968): avc:  denied  { name_bind } for  pid=3277 comm="[01;31m[Knginx[m[K" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
 type=SYSCALL msg=audit(1689689987.462:968): arch=c000003e syscall=49 success=no exit=-13 a0=6 a1=55582c2eb878 a2=10 a3=7ffc1bec1940 items=0 ppid=1 pid=3277 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="[01;31m[Knginx[m[K" exe="/usr/sbin/[01;31m[Knginx[m[K" subj=system_u:system_r:httpd_t:s0 key=(null)
 type=SERVICE_START msg=audit(1689689987.467:969): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=failed'
+
+###с помощью утилиты audit2allow формируем новый модуль selinux на базе информации полученной с логов
+
 ]0;root@selinux:~[root@selinux ~]# grep nginx /var/log/audit/audit.log | audit2allow -M nginx
 ******************** IMPORTANT ***********************
 To make this policy package active, execute:
 
+###добавляем новый модуль и убеждаемся что серви стал работоспособен
 semodule -i nginx.pp
 
 ]0;root@selinux:~[root@selinux ~]# semodule -i nginx.pp
