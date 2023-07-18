@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+ config.vm.box = "centos/7"
+ config.vm.box_version = "2004.01"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 256
+    v.cpus = 1
+  end
+
+  config.vm.define "selinux" do |selinux|
+    selinux.vm.network "forwarded_port", guest: 4881, host: 4881
+    selinux.vm.hostname = "selinux"
+    selinux.vm.provision "shell", path: "selinux.sh"
+  end
+end

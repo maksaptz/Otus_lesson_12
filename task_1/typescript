@@ -1,0 +1,591 @@
+Script started on Tue Jul 18 14:15:25 2023
+]0;root@selinux:~[?1034h[root@selinux ~]# systemctl status nginx.service 
+[1;31m●[0m nginx.service - The nginx HTTP and reverse proxy server
+   Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; vendor preset: disabled)
+   Active: [1;31mfailed[0m (Result: exit-code) since Tue 2023-07-18 14:12:35 UTC; 2min 58s ago
+  Process: 3074 ExecStartPre=/usr/sbin/nginx -t [1;31m(code=exited, status=1/FAILURE)[0m
+  Process: 3072 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)
+
+Jul 18 14:12:35 selinux systemd[1]: Starting The nginx HTTP and reverse pro.....
+Jul 18 14:12:35 selinux nginx[3074]: nginx: the configuration file /etc/ngi...ok
+Jul 18 14:12:35 selinux nginx[3074]: nginx: [emerg] bind() to 0.0.0.0:4881 ...d)
+Jul 18 14:12:35 selinux nginx[3074]: nginx: configuration file /etc/nginx/n...ed
+Jul 18 14:12:35 selinux systemd[1]: [1;39mnginx.service: control process exited, ...=1[0m
+Jul 18 14:12:35 selinux systemd[1]: [1;31mFailed to start The nginx HTTP and reve...r.[0m
+Jul 18 14:12:35 selinux systemd[1]: [1;39mUnit nginx.service entered failed state.[0m
+Jul 18 14:12:35 selinux systemd[1]: [1;39mnginx.service failed.[0m
+Hint: Some lines were ellipsized, use -l to show in full.
+]0;root@selinux:~[root@selinux ~]# tail [K[K[K[K[Ksystemctl status nginx.service [C[1P[1P[1P[1P[1P[1P[1@r[1@s[1P[1@e[1@s[1@t[1@a[1@r[1@t
+Job for nginx.service failed because the control process exited with error code. See "systemctl status nginx.service" and "journalctl -xe" for details.
+]0;root@selinux:~[root@selinux ~]# tail /var/lo/[Kg/audit/audit.log 
+type=CRYPTO_KEY_USER msg=audit(1689689623.732:938): pid=3128 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=session fp=? direction=both spid=3129 suid=74 rport=50856 laddr=10.0.2.15 lport=22  exe="/usr/sbin/sshd" hostname=? addr=10.0.2.15 terminal=? res=success'
+type=USER_ERR msg=audit(1689689623.734:939): pid=3128 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=PAM:bad_ident grantors=? acct="?" exe="/usr/sbin/sshd" hostname=10.0.2.15 addr=10.0.2.15 terminal=ssh res=failed'
+type=CRYPTO_KEY_USER msg=audit(1689689623.734:940): pid=3128 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:f5:c4:1c:33:34:01:8a:c2:29:e3:28:44:d7:a0:3b:ac:03:bb:ae:db:92:37:f8:d4:d4:de:15:03:c5:03:c6:56 direction=? spid=3128 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+type=CRYPTO_KEY_USER msg=audit(1689689623.734:941): pid=3128 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:d3:dd:57:bf:47:de:d9:30:93:2c:9b:d0:66:43:5f:df:29:14:aa:30:02:ba:29:7b:76:a8:91:06:5a:e8:7d:50 direction=? spid=3128 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+type=CRYPTO_KEY_USER msg=audit(1689689623.735:942): pid=3128 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=destroy kind=server fp=SHA256:35:87:9b:36:c7:a8:22:ab:81:0b:6a:81:23:02:69:6d:24:27:db:0b:cb:c2:e4:29:01:59:34:f6:79:fb:22:a0 direction=? spid=3128 suid=0  exe="/usr/sbin/sshd" hostname=? addr=? terminal=? res=success'
+type=USER_LOGIN msg=audit(1689689623.735:943): pid=3128 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:sshd_t:s0-s0:c0.c1023 msg='op=login acct="(unknown)" exe="/usr/sbin/sshd" hostname=? addr=10.0.2.15 terminal=ssh res=failed'
+type=AVC msg=audit(1689689756.525:944): avc:  denied  { name_bind } for  pid=3167 comm="nginx" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+type=SYSCALL msg=audit(1689689756.525:944): arch=c000003e syscall=49 success=no exit=-13 a0=6 a1=5573a718f878 a2=10 a3=7ffea77bb130 items=0 ppid=1 pid=3167 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="nginx" exe="/usr/sbin/nginx" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=PROCTITLE msg=audit(1689689756.525:944): proctitle=2F7573722F7362696E2F6E67696E78002D74
+type=SERVICE_START msg=audit(1689689756.528:945): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=nginx comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=failed'
+]0;root@selinux:~[root@selinux ~]# [K[root@selinux ~]# [K[root@selinux ~]# 1689689756.525:944g1689689756.525:944r1689689756.525:944e1689689756.525:944p1689689756.525:944 1689689756.525:944[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C /var/log/audit/audit.log | audit2why
+type=AVC msg=audit(1689689756.525:944): avc:  denied  { name_bind } for  pid=3167 comm="nginx" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+
+	Was caused by:
+	The boolean nis_enabled was set incorrectly. 
+	Description:
+	Allow nis to enabled
+
+	Allow access by executing:
+	# setsebool -P nis_enabled 1
+]0;root@selinux:~[root@selinux ~]# setsebool -P nis_enabled 1
+]0;root@selinux:~[root@selinux ~]# setsebool -P nis_enabled 1[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgrep 1689689756.525:944 /var/log/audit/audit.log | audit2why[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[30Ptail /var/log/audit/audit.log [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgrep 1689689756.525:944 /var/log/audit/audit.log | audit2why[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[30Ptail /var/log/audit/audit.log [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2@systemctl restart nginx.service[C
+]0;root@selinux:~[root@selinux ~]# curl[K[K[K[Ksystemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Petsebool -P nis_enabled 1[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgrep 1689689756.525:944 /var/log/audit/audit.log | audit2why[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[30Ptail /var/log/audit/audit.log [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2@systemctl restart nginx.service[C[1Pstatus[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+[1;32m●[0m nginx.service - The nginx HTTP and reverse proxy server
+   Loaded: loaded (/usr/lib/systemd/system/nginx.service; disabled; vendor preset: disabled)
+   Active: [1;32mactive (running)[0m since Tue 2023-07-18 14:17:35 UTC; 7s ago
+  Process: 3201 ExecStart=/usr/sbin/nginx (code=exited, status=0/SUCCESS)
+  Process: 3198 ExecStartPre=/usr/sbin/nginx -t (code=exited, status=0/SUCCESS)
+  Process: 3197 ExecStartPre=/usr/bin/rm -f /run/nginx.pid (code=exited, status=0/SUCCESS)
+ Main PID: 3203 (nginx)
+   CGroup: /system.slice/nginx.service
+           ├─3203 nginx: master process /usr/sbin/nginx
+           └─3204 nginx: worker process
+
+Jul 18 14:17:35 selinux systemd[1]: Starting The nginx HTTP and reverse proxy server...
+Jul 18 14:17:35 selinux nginx[3198]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+Jul 18 14:17:35 selinux systemd[1]: Started The nginx HTTP and reverse proxy server.
+Jul 18 14:17:35 selinux nginx[3198]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+]0;root@selinux:~[root@selinux ~]# systemctl status nginx.service [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[Kcurl 127.0.01[K.01[K.1[K[K[K1:4881
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Welcome to CentOS</title>
+  <style rel="stylesheet" type="text/css"> 
+
+	html {
+	background-image:url(img/html-background.png);
+	background-color: white;
+	font-family: "DejaVu Sans", "Liberation Sans", sans-serif;
+	font-size: 0.85em;
+	line-height: 1.25em;
+	margin: 0 4% 0 4%;
+	}
+
+	body {
+	border: 10px solid #fff;
+	margin:0;
+	padding:0;
+	background: #fff;
+	}
+
+	/* Links */
+
+	a:link { border-bottom: 1px dotted #ccc; text-decoration: none; color: #204d92; }
+	a:hover { border-bottom:1px dotted #ccc; text-decoration: underline; color: green; }
+	a:active {  border-bottom:1px dotted #ccc; text-decoration: underline; color: #204d92; }
+	a:visited { border-bottom:1px dotted #ccc; text-decoration: none; color: #204d92; }
+	a:visited:hover { border-bottom:1px dotted #ccc; text-decoration: underline; color: green; }
+ 
+	.logo a:link,
+	.logo a:hover,
+	.logo a:visited { border-bottom: none; }
+
+	.mainlinks a:link { border-bottom: 1px dotted #ddd; text-decoration: none; color: #eee; }
+	.mainlinks a:hover { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+	.mainlinks a:active { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+	.mainlinks a:visited { border-bottom:1px dotted #ddd; text-decoration: none; color: white; }
+	.mainlinks a:visited:hover { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+
+	/* User interface styles */
+
+	#header {
+	margin:0;
+	padding: 0.5em;
+	background: #204D8C url(img/header-background.png);
+	text-align: left;
+	}
+
+	.logo {
+	padding: 0;
+	/* For text only logo */
+	font-size: 1.4em;
+	line-height: 1em;
+	font-weight: bold;
+	}
+
+	.logo img {
+	vertical-align: middle;
+	padding-right: 1em;
+	}
+
+	.logo a {
+	color: #fff;
+	text-decoration: none;
+	}
+
+	p {
+	line-height:1.5em;
+	}
+
+	h1 { 
+		margin-bottom: 0;
+		line-height: 1.9em; }
+	h2 { 
+		margin-top: 0;
+		line-height: 1.7em; }
+
+	#content {
+	clear:both;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-bottom: 30px;
+	border-bottom: 5px solid #eee;
+	}
+
+    .mainlinks {
+        float: right;
+        margin-top: 0.5em;
+        text-align: right;
+    }
+
+    ul.mainlinks > li {
+    border-right: 1px dotted #ddd;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: inline;
+    list-style: none;
+    }
+
+    ul.mainlinks > li.last,
+    ul.mainlinks > li.first {
+    border-right: none;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div id="header">
+
+    <ul class="mainlinks">
+        <li> <a href="http://www.centos.org/">Home</a> </li>
+        <li> <a href="http://wiki.centos.org/">Wiki</a> </li>
+        <li> <a href="http://wiki.centos.org/GettingHelp/ListInfo">Mailing Lists</a></li>
+        <li> <a href="http://www.centos.org/download/mirrors/">Mirror List</a></li>
+        <li> <a href="http://wiki.centos.org/irc">IRC</a></li>
+        <li> <a href="https://www.centos.org/forums/">Forums</a></li>
+        <li> <a href="http://bugs.centos.org/">Bugs</a> </li>
+        <li class="last"> <a href="http://wiki.centos.org/Donate">Donate</a></li>
+    </ul>
+
+	<div class="logo">
+		<a href="http://www.centos.org/"><img src="img/centos-logo.png" border="0"></a>
+	</div>
+
+</div>
+
+<div id="content">
+
+	<h1>Welcome to CentOS</h1>
+
+	<h2>The Community ENTerprise Operating System</h2>
+
+	<p><a href="http://www.centos.org/">CentOS</a> is an Enterprise-class Linux Distribution derived from sources freely provided
+to the public by Red Hat, Inc. for Red Hat Enterprise Linux.  CentOS conforms fully with the upstream vendors
+redistribution policy and aims to be functionally compatible. (CentOS mainly changes packages to remove upstream vendor
+branding and artwork.)</p>
+
+	<p>CentOS is developed by a small but growing team of core
+developers.&nbsp; In turn the core developers are supported by an active user community
+including system administrators, network administrators, enterprise users, managers, core Linux contributors and Linux enthusiasts from around the world.</p>
+
+	<p>CentOS has numerous advantages including: an active and growing user community, quickly rebuilt, tested, and QA'ed errata packages, an extensive <a href="http://www.centos.org/download/mirrors/">mirror network</a>, developers who are contactable and responsive, Special Interest Groups (<a href="http://wiki.centos.org/SpecialInterestGroup/">SIGs</a>) to add functionality to the core CentOS distribution, and multiple community support avenues including a <a href="http://wiki.centos.org/">wiki</a>, <a
+href="http://wiki.centos.org/irc">IRC Chat</a>, <a href="http://wiki.centos.org/GettingHelp/ListInfo">Email Lists</a>, <a href="https://www.centos.org/forums/">Forums</a>, <a href="http://bugs.centos.org/">Bugs Database</a>, and an <a
+href="http://wiki.centos.org/FAQ/">FAQ</a>.</p>
+
+	</div>
+
+</div>
+
+
+</body>
+</html>
+]0;root@selinux:~[root@selinux ~]# curl 127.0.0.1:4881systemctl status nginx.service [1@restart[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Petsebool -P nis_enabled 1[K0
+]0;root@selinux:~[root@selinux ~]# setsebool -P nis_enabled 0[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[7Pcurl 127.0.0.1:4881systemctl status nginx.service [1@restart[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+Job for nginx.service failed because the control process exited with error code. See "systemctl status nginx.service" and "journalctl -xe" for details.
+]0;root@selinux:~[root@selinux ~]# systemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Petsebool -P nis_enabled 0[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[7Pcurl 127.0.0.1:4881
+curl: (7) Failed connect to 127.0.0.1:4881; Connection refused
+]0;root@selinux:~[root@selinux ~]# semanage port -l | grep http
+[01;31m[Khttp[m[K_cache_port_t              tcp      8080, 8118, 8123, 10001-10010
+[01;31m[Khttp[m[K_cache_port_t              udp      3130
+[01;31m[Khttp[m[K_port_t                    tcp      80, 81, 443, 488, 8008, 8009, 8443, 9000
+pegasus_[01;31m[Khttp[m[K_port_t            tcp      5988
+pegasus_[01;31m[Khttp[m[Ks_port_t           tcp      5989
+]0;root@selinux:~[root@selinux ~]# emanage port -a -t http_port_t -p tcp 4881[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1@s
+]0;root@selinux:~[root@selinux ~]# semanage port -a -t http_port_t -p tcp 4881[15Pl | grep http[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[9Pcurl 127.0.0.1:4881systemctl restart nginx.service 
+]0;root@selinux:~[root@selinux ~]# systemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cemanage port -a -t http_port_t -p tcp 4881[15Pl | grep http[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[9Pcurl 127.0.0.1:4881
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Welcome to CentOS</title>
+  <style rel="stylesheet" type="text/css"> 
+
+	html {
+	background-image:url(img/html-background.png);
+	background-color: white;
+	font-family: "DejaVu Sans", "Liberation Sans", sans-serif;
+	font-size: 0.85em;
+	line-height: 1.25em;
+	margin: 0 4% 0 4%;
+	}
+
+	body {
+	border: 10px solid #fff;
+	margin:0;
+	padding:0;
+	background: #fff;
+	}
+
+	/* Links */
+
+	a:link { border-bottom: 1px dotted #ccc; text-decoration: none; color: #204d92; }
+	a:hover { border-bottom:1px dotted #ccc; text-decoration: underline; color: green; }
+	a:active {  border-bottom:1px dotted #ccc; text-decoration: underline; color: #204d92; }
+	a:visited { border-bottom:1px dotted #ccc; text-decoration: none; color: #204d92; }
+	a:visited:hover { border-bottom:1px dotted #ccc; text-decoration: underline; color: green; }
+ 
+	.logo a:link,
+	.logo a:hover,
+	.logo a:visited { border-bottom: none; }
+
+	.mainlinks a:link { border-bottom: 1px dotted #ddd; text-decoration: none; color: #eee; }
+	.mainlinks a:hover { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+	.mainlinks a:active { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+	.mainlinks a:visited { border-bottom:1px dotted #ddd; text-decoration: none; color: white; }
+	.mainlinks a:visited:hover { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+
+	/* User interface styles */
+
+	#header {
+	margin:0;
+	padding: 0.5em;
+	background: #204D8C url(img/header-background.png);
+	text-align: left;
+	}
+
+	.logo {
+	padding: 0;
+	/* For text only logo */
+	font-size: 1.4em;
+	line-height: 1em;
+	font-weight: bold;
+	}
+
+	.logo img {
+	vertical-align: middle;
+	padding-right: 1em;
+	}
+
+	.logo a {
+	color: #fff;
+	text-decoration: none;
+	}
+
+	p {
+	line-height:1.5em;
+	}
+
+	h1 { 
+		margin-bottom: 0;
+		line-height: 1.9em; }
+	h2 { 
+		margin-top: 0;
+		line-height: 1.7em; }
+
+	#content {
+	clear:both;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-bottom: 30px;
+	border-bottom: 5px solid #eee;
+	}
+
+    .mainlinks {
+        float: right;
+        margin-top: 0.5em;
+        text-align: right;
+    }
+
+    ul.mainlinks > li {
+    border-right: 1px dotted #ddd;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: inline;
+    list-style: none;
+    }
+
+    ul.mainlinks > li.last,
+    ul.mainlinks > li.first {
+    border-right: none;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div id="header">
+
+    <ul class="mainlinks">
+        <li> <a href="http://www.centos.org/">Home</a> </li>
+        <li> <a href="http://wiki.centos.org/">Wiki</a> </li>
+        <li> <a href="http://wiki.centos.org/GettingHelp/ListInfo">Mailing Lists</a></li>
+        <li> <a href="http://www.centos.org/download/mirrors/">Mirror List</a></li>
+        <li> <a href="http://wiki.centos.org/irc">IRC</a></li>
+        <li> <a href="https://www.centos.org/forums/">Forums</a></li>
+        <li> <a href="http://bugs.centos.org/">Bugs</a> </li>
+        <li class="last"> <a href="http://wiki.centos.org/Donate">Donate</a></li>
+    </ul>
+
+	<div class="logo">
+		<a href="http://www.centos.org/"><img src="img/centos-logo.png" border="0"></a>
+	</div>
+
+</div>
+
+<div id="content">
+
+	<h1>Welcome to CentOS</h1>
+
+	<h2>The Community ENTerprise Operating System</h2>
+
+	<p><a href="http://www.centos.org/">CentOS</a> is an Enterprise-class Linux Distribution derived from sources freely provided
+to the public by Red Hat, Inc. for Red Hat Enterprise Linux.  CentOS conforms fully with the upstream vendors
+redistribution policy and aims to be functionally compatible. (CentOS mainly changes packages to remove upstream vendor
+branding and artwork.)</p>
+
+	<p>CentOS is developed by a small but growing team of core
+developers.&nbsp; In turn the core developers are supported by an active user community
+including system administrators, network administrators, enterprise users, managers, core Linux contributors and Linux enthusiasts from around the world.</p>
+
+	<p>CentOS has numerous advantages including: an active and growing user community, quickly rebuilt, tested, and QA'ed errata packages, an extensive <a href="http://www.centos.org/download/mirrors/">mirror network</a>, developers who are contactable and responsive, Special Interest Groups (<a href="http://wiki.centos.org/SpecialInterestGroup/">SIGs</a>) to add functionality to the core CentOS distribution, and multiple community support avenues including a <a href="http://wiki.centos.org/">wiki</a>, <a
+href="http://wiki.centos.org/irc">IRC Chat</a>, <a href="http://wiki.centos.org/GettingHelp/ListInfo">Email Lists</a>, <a href="https://www.centos.org/forums/">Forums</a>, <a href="http://bugs.centos.org/">Bugs Database</a>, and an <a
+href="http://wiki.centos.org/FAQ/">FAQ</a>.</p>
+
+	</div>
+
+</div>
+
+
+</body>
+</html>
+]0;root@selinux:~[root@selinux ~]# curl 127.0.0.1:4881systemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cemanage port -a -t http_port_t -p tcp 4881[C[1P[1@d
+]0;root@selinux:~[root@selinux ~]# semanage port -d -t http_port_t -p tcp 4881[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pcurl 127.0.0.1:4881systemctl restart nginx.service 
+Job for nginx.service failed because the control process exited with error code. See "systemctl status nginx.service" and "journalctl -xe" for details.
+]0;root@selinux:~[root@selinux ~]# systemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cemanage port -d -t http_port_t -p tcp 4881[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[24Pcurl 127.0.0.1:4881systemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[13Pcurl 127.0.0.1:4881
+curl: (7) Failed connect to 127.0.0.1:4881; Connection refused
+]0;root@selinux:~[root@selinux ~]# systemctl start nginx
+Job for nginx.service failed because the control process exited with error code. See "systemctl status nginx.service" and "journalctl -xe" for details.
+]0;root@selinux:~[root@selinux ~]# grep nginx /var/log/audit/audit.log
+type=SOFTWARE_UPDATE msg=audit(1689689555.221:887): pid=2927 uid=0 auid=1000 ses=2 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='sw="[01;31m[Knginx[m[K-filesystem-1:1.20.1-10.el7.noarch" sw_type=rpm key_enforce=0 gpg_res=1 root_dir="/" comm="yum" exe="/usr/bin/python2.7" hostname=? addr=? terminal=? res=success'
+type=SOFTWARE_UPDATE msg=audit(1689689555.423:888): pid=2927 uid=0 auid=1000 ses=2 subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 msg='sw="[01;31m[Knginx[m[K-1:1.20.1-10.el7.x86_64" sw_type=rpm key_enforce=0 gpg_res=1 root_dir="/" comm="yum" exe="/usr/bin/python2.7" hostname=? addr=? terminal=? res=success'
+type=AVC msg=audit(1689689555.725:889): avc:  denied  { name_bind } for  pid=3074 comm="[01;31m[Knginx[m[K" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+type=SYSCALL msg=audit(1689689555.725:889): arch=c000003e syscall=49 success=no exit=-13 a0=6 a1=5564830a3878 a2=10 a3=7fff329f2900 items=0 ppid=1 pid=3074 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="[01;31m[Knginx[m[K" exe="/usr/sbin/[01;31m[Knginx[m[K" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=SERVICE_START msg=audit(1689689555.730:890): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=failed'
+type=AVC msg=audit(1689689756.525:944): avc:  denied  { name_bind } for  pid=3167 comm="[01;31m[Knginx[m[K" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+type=SYSCALL msg=audit(1689689756.525:944): arch=c000003e syscall=49 success=no exit=-13 a0=6 a1=5573a718f878 a2=10 a3=7ffea77bb130 items=0 ppid=1 pid=3167 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="[01;31m[Knginx[m[K" exe="/usr/sbin/[01;31m[Knginx[m[K" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=SERVICE_START msg=audit(1689689756.528:945): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=failed'
+type=SERVICE_START msg=audit(1689689855.441:950): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+type=SERVICE_STOP msg=audit(1689689896.055:955): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+type=AVC msg=audit(1689689896.085:956): avc:  denied  { name_bind } for  pid=3222 comm="[01;31m[Knginx[m[K" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+type=SYSCALL msg=audit(1689689896.085:956): arch=c000003e syscall=49 success=no exit=-13 a0=6 a1=56241f981878 a2=10 a3=7ffc23beedf0 items=0 ppid=1 pid=3222 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="[01;31m[Knginx[m[K" exe="/usr/sbin/[01;31m[Knginx[m[K" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=SERVICE_START msg=audit(1689689896.088:957): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=failed'
+type=SERVICE_START msg=audit(1689689942.090:961): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+type=SERVICE_STOP msg=audit(1689689963.632:965): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+type=AVC msg=audit(1689689963.661:966): avc:  denied  { name_bind } for  pid=3265 comm="[01;31m[Knginx[m[K" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+type=SYSCALL msg=audit(1689689963.661:966): arch=c000003e syscall=49 success=no exit=-13 a0=6 a1=560dfc1e9878 a2=10 a3=7fffc3cb4a30 items=0 ppid=1 pid=3265 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="[01;31m[Knginx[m[K" exe="/usr/sbin/[01;31m[Knginx[m[K" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=SERVICE_START msg=audit(1689689963.663:967): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=failed'
+type=AVC msg=audit(1689689987.462:968): avc:  denied  { name_bind } for  pid=3277 comm="[01;31m[Knginx[m[K" src=4881 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:unreserved_port_t:s0 tclass=tcp_socket permissive=0
+type=SYSCALL msg=audit(1689689987.462:968): arch=c000003e syscall=49 success=no exit=-13 a0=6 a1=55582c2eb878 a2=10 a3=7ffc1bec1940 items=0 ppid=1 pid=3277 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=4294967295 comm="[01;31m[Knginx[m[K" exe="/usr/sbin/[01;31m[Knginx[m[K" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=SERVICE_START msg=audit(1689689987.467:969): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg='unit=[01;31m[Knginx[m[K comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=failed'
+]0;root@selinux:~[root@selinux ~]# grep nginx /var/log/audit/audit.log | audit2allow -M nginx
+******************** IMPORTANT ***********************
+To make this policy package active, execute:
+
+semodule -i nginx.pp
+
+]0;root@selinux:~[root@selinux ~]# semodule -i nginx.pp
+]0;root@selinux:~[root@selinux ~]# semodule -i nginx.pp[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgrep nginx /var/log/audit/audit.log | audit2allow -M nginx[K[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[14Psystemctl start nginx[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2Pcurl 127.0.0.1:4881systemctl start nginx[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2Pcurl 127.0.0.1:4881systemctl restart nginx.service 
+]0;root@selinux:~[root@selinux ~]# systemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[12Pemodule -i nginx.pp[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cgrep nginx /var/log/audit/audit.log | audit2allow -M nginx[K[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[14Psystemctl start nginx[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[2Pcurl 127.0.0.1:4881systemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[13Pcurl 127.0.0.1:4881
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Welcome to CentOS</title>
+  <style rel="stylesheet" type="text/css"> 
+
+	html {
+	background-image:url(img/html-background.png);
+	background-color: white;
+	font-family: "DejaVu Sans", "Liberation Sans", sans-serif;
+	font-size: 0.85em;
+	line-height: 1.25em;
+	margin: 0 4% 0 4%;
+	}
+
+	body {
+	border: 10px solid #fff;
+	margin:0;
+	padding:0;
+	background: #fff;
+	}
+
+	/* Links */
+
+	a:link { border-bottom: 1px dotted #ccc; text-decoration: none; color: #204d92; }
+	a:hover { border-bottom:1px dotted #ccc; text-decoration: underline; color: green; }
+	a:active {  border-bottom:1px dotted #ccc; text-decoration: underline; color: #204d92; }
+	a:visited { border-bottom:1px dotted #ccc; text-decoration: none; color: #204d92; }
+	a:visited:hover { border-bottom:1px dotted #ccc; text-decoration: underline; color: green; }
+ 
+	.logo a:link,
+	.logo a:hover,
+	.logo a:visited { border-bottom: none; }
+
+	.mainlinks a:link { border-bottom: 1px dotted #ddd; text-decoration: none; color: #eee; }
+	.mainlinks a:hover { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+	.mainlinks a:active { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+	.mainlinks a:visited { border-bottom:1px dotted #ddd; text-decoration: none; color: white; }
+	.mainlinks a:visited:hover { border-bottom:1px dotted #ddd; text-decoration: underline; color: white; }
+
+	/* User interface styles */
+
+	#header {
+	margin:0;
+	padding: 0.5em;
+	background: #204D8C url(img/header-background.png);
+	text-align: left;
+	}
+
+	.logo {
+	padding: 0;
+	/* For text only logo */
+	font-size: 1.4em;
+	line-height: 1em;
+	font-weight: bold;
+	}
+
+	.logo img {
+	vertical-align: middle;
+	padding-right: 1em;
+	}
+
+	.logo a {
+	color: #fff;
+	text-decoration: none;
+	}
+
+	p {
+	line-height:1.5em;
+	}
+
+	h1 { 
+		margin-bottom: 0;
+		line-height: 1.9em; }
+	h2 { 
+		margin-top: 0;
+		line-height: 1.7em; }
+
+	#content {
+	clear:both;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-bottom: 30px;
+	border-bottom: 5px solid #eee;
+	}
+
+    .mainlinks {
+        float: right;
+        margin-top: 0.5em;
+        text-align: right;
+    }
+
+    ul.mainlinks > li {
+    border-right: 1px dotted #ddd;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: inline;
+    list-style: none;
+    }
+
+    ul.mainlinks > li.last,
+    ul.mainlinks > li.first {
+    border-right: none;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div id="header">
+
+    <ul class="mainlinks">
+        <li> <a href="http://www.centos.org/">Home</a> </li>
+        <li> <a href="http://wiki.centos.org/">Wiki</a> </li>
+        <li> <a href="http://wiki.centos.org/GettingHelp/ListInfo">Mailing Lists</a></li>
+        <li> <a href="http://www.centos.org/download/mirrors/">Mirror List</a></li>
+        <li> <a href="http://wiki.centos.org/irc">IRC</a></li>
+        <li> <a href="https://www.centos.org/forums/">Forums</a></li>
+        <li> <a href="http://bugs.centos.org/">Bugs</a> </li>
+        <li class="last"> <a href="http://wiki.centos.org/Donate">Donate</a></li>
+    </ul>
+
+	<div class="logo">
+		<a href="http://www.centos.org/"><img src="img/centos-logo.png" border="0"></a>
+	</div>
+
+</div>
+
+<div id="content">
+
+	<h1>Welcome to CentOS</h1>
+
+	<h2>The Community ENTerprise Operating System</h2>
+
+	<p><a href="http://www.centos.org/">CentOS</a> is an Enterprise-class Linux Distribution derived from sources freely provided
+to the public by Red Hat, Inc. for Red Hat Enterprise Linux.  CentOS conforms fully with the upstream vendors
+redistribution policy and aims to be functionally compatible. (CentOS mainly changes packages to remove upstream vendor
+branding and artwork.)</p>
+
+	<p>CentOS is developed by a small but growing team of core
+developers.&nbsp; In turn the core developers are supported by an active user community
+including system administrators, network administrators, enterprise users, managers, core Linux contributors and Linux enthusiasts from around the world.</p>
+
+	<p>CentOS has numerous advantages including: an active and growing user community, quickly rebuilt, tested, and QA'ed errata packages, an extensive <a href="http://www.centos.org/download/mirrors/">mirror network</a>, developers who are contactable and responsive, Special Interest Groups (<a href="http://wiki.centos.org/SpecialInterestGroup/">SIGs</a>) to add functionality to the core CentOS distribution, and multiple community support avenues including a <a href="http://wiki.centos.org/">wiki</a>, <a
+href="http://wiki.centos.org/irc">IRC Chat</a>, <a href="http://wiki.centos.org/GettingHelp/ListInfo">Email Lists</a>, <a href="https://www.centos.org/forums/">Forums</a>, <a href="http://bugs.centos.org/">Bugs Database</a>, and an <a
+href="http://wiki.centos.org/FAQ/">FAQ</a>.</p>
+
+	</div>
+
+</div>
+
+
+</body>
+</html>
+]0;root@selinux:~[root@selinux ~]# emodule -r nginx
+bash: emodule: command not found
+]0;root@selinux:~[root@selinux ~]# emodule -r nginx[1@s
+libsemanage.semanage_direct_remove_key: Removing last nginx module (no other nginx module exists at another priority).
+]0;root@selinux:~[root@selinux ~]# semodule -r nginx[1P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccurl 127.0.0.1:4881systemctl restart nginx.service 
+Job for nginx.service failed because the control process exited with error code. See "systemctl status nginx.service" and "journalctl -xe" for details.
+]0;root@selinux:~[root@selinux ~]# systemctl restart nginx.service [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[15Pemodule -r nginx[1P[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccurl 127.0.0.1:4881
+curl: (7) Failed connect to 127.0.0.1:4881; Connection refused
+]0;root@selinux:~[root@selinux ~]# exit
+exit
+
+Script done on Tue Jul 18 14:21:28 2023
