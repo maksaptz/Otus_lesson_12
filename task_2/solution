@@ -1,3 +1,6 @@
 semanage fcontext -a -t named_zone_t "/etc/named(/.*)?"
 restorecon -R -v /etc/named
 semanage fcontext -a -t etc_t "/etc/named(/.*)?"
+
+
+https://github.com/mbfx/otus-linux-adm/tree/664cc1de4d02e6fc8a7b44580c7d92dc68ea23f8/selinux_dns_problems
